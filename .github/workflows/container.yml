@@ -25,6 +25,7 @@ jobs:
       - run: npm install
         working-directory: ./packages/container
       - run: npm run build
+        working-directory: ./packages/container
 
       - uses: shinyinc/action-aws-cli@v1.2
       - run: |
