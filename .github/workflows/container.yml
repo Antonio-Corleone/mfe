@@ -23,6 +23,7 @@ jobs:
             ${{ runner.os }}-node-
 
       - run: npm install
+        working-directory: ./packages/container
       - run: npm run build
 
       - uses: shinyinc/action-aws-cli@v1.2
