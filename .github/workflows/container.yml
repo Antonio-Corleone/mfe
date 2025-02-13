@@ -7,6 +7,7 @@ on:
         - main
       paths:
         - 'packages/container/**'
+        - '.github/workflows/container.yml'
 
 jobs:
   build:
@@ -24,8 +25,12 @@ jobs:
 
       - run: npm install
         working-directory: ./packages/container
-      - run: npm run build -- --output-path=dist
+      - run: npm run build
         working-directory: ./packages/container
+
+      # New step to list contents of the directory
+      - name: List contents of the build directory
+        run: ls -la ./packages/container
 
       - uses: shinyinc/action-aws-cli@v1.2
       - name: Sync to S3
