@@ -1,13 +1,13 @@
 # This workflow deploys the container to an AWS S3 bucket whenever there is a push to the `main` branch.
-name: deploy-container
+name: deploy-marketing
 
 on:
     push:
       branches:
         - main
       paths:
-        - 'packages/container/**'
-        - '.github/workflows/container.yml'
+        - 'packages/marketing/**'
+        - '.github/workflows/marketing.yml'
 
 jobs:
   build:
@@ -24,21 +24,18 @@ jobs:
             ${{ runner.os }}-node-
 
       - run: npm install
-        working-directory: ./packages/container
+        working-directory: ./packages/marketing
       - run: npm run build
-        # Pass the production domain as an environment variable
-        env: 
-          PRODUCTION_DOMAIN: ${{ secrets.PRODUCTION_DOMAIN }}
-        working-directory: ./packages/container
+        working-directory: ./packages/marketing
 
       # New step to list contents of the directory
       - name: List contents of the build directory
-        run: ls -la ./packages/container
+        run: ls -la ./packages/marketing
 
       - uses: shinyinc/action-aws-cli@v1.2
       - name: Sync to S3
       # Sync the contents of the `packages/container/dist` directory to the S3 bucket
-        run: aws s3 sync ./packages/container/dist s3://${{ secrets.AWS_S3_BUCKET_NAME }}/container/latest --delete
+        run: aws s3 sync ./packages/container/dist s3://${{ secrets.AWS_S3_BUCKET_NAME }}/marketing/latest --delete
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -46,7 +43,7 @@ jobs:
 
       # New step to invalidate CloudFront cache
       - name: Invalidate CloudFront cache
-        run: aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/container/latest/index.html"
+        run: aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/marketing/latest/remoteEntry.js"
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
