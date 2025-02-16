@@ -2,12 +2,15 @@
 name: deploy-container
 
 on:
-    push:
-      branches:
-        - main
-      paths:
-        - 'packages/container/**'
-        - '.github/workflows/container.yml'
+  push:
+    tags:
+      - '*'
+    branches:
+      - main
+    paths:
+      - 'packages/container/**'
+      - '.github/workflows/container.yml'
+  workflow_dispatch:
 
 jobs:
   build:
