@@ -2,12 +2,13 @@
 name: deploy-marketing
 
 on:
-    push:
-      branches:
-        - main
-      paths:
-        - 'packages/marketing/**'
-        - '.github/workflows/marketing.yml'
+    # push:
+    #   branches:
+    #     - main
+    #   paths:
+    #     - 'packages/marketing/**'
+    #     - '.github/workflows/marketing.yml'
+    workflow_dispatch:
 
 jobs:
   build:
