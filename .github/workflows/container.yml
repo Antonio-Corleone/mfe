@@ -34,6 +34,7 @@ jobs:
 
       - uses: shinyinc/action-aws-cli@v1.2
       - name: Sync to S3
+      # Sync the contents of the `packages/container/dist` directory to the S3 bucket
         run: aws s3 sync ./packages/container/dist s3://${{ secrets.AWS_S3_BUCKET_NAME }}/container/latest --delete
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
