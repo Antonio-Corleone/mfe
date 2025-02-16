@@ -10,7 +10,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import MaterialLink from '@material-ui/core/Link';
 import { Link } from 'react-router-dom';
-
+import imgSRC from '../../public/imgs/book.jpg'
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -119,7 +119,7 @@ export default function Album() {
                 <Card className={classes.card}>
                   <CardMedia
                     className={classes.cardMedia}
-                    image="https://source.unsplash.com/random"
+                    image={imgSRC}
                     title="Image title"
                   />
                   <CardContent className={classes.cardContent}>
