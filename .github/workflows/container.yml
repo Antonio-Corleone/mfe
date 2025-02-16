@@ -11,6 +11,11 @@ on:
   #     - 'packages/container/**'
   #     - '.github/workflows/container.yml'
   workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to deploy'
+        required: true
+        default: 'latest'
 
 jobs:
   build:
