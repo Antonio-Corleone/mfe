@@ -17,25 +17,36 @@ const history = createBrowserHistory();
 
 export default function App() {
   const [isSignedIn, setIsSignedIn] = useState(false);
-  
+
+  const handleSignIn = () => {
+    setIsSignedIn(true);
+    localStorage.setItem('isSignedIn', 'true');
+  };
+  const handleLogout = () => {
+    setIsSignedIn(false);
+    localStorage.removeItem('isSignedIn');
+  }
+
   useEffect(() => {
-    console.log('test');
-    if (isSignedIn) {
-      history.push('/dashboard');
-    }else{
-      history.push('/');
+    const signedIn = localStorage.getItem('isSignedIn');
+    if (signedIn) {
+      setIsSignedIn(true);
     }
+    if (isSignedIn || signedIn) {
+      history.push('/dashboard');
+    }
+
   }, [isSignedIn]);
-  
+
   return (
     <Router history={history}>
       <StylesProvider generateClassName={generateClassName}>
         <div>
-          <Header isSignedIn={isSignedIn} onSignOut={() => setIsSignedIn(false)} />
+          <Header isSignedIn={isSignedIn} onSignOut={handleLogout} />
           <Suspense fallback={<Progress />}>
             <Switch>
               <Route path="/auth">
-                <AuthAppLazy onSignIn={() => setIsSignedIn(true)} />
+                <AuthAppLazy onSignIn={handleSignIn} />
               </Route>
               <Route path="/dashboard">
                 {!isSignedIn && <Redirect to="/" />}
