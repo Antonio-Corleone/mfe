@@ -1,0 +1,51 @@
+# This workflow deploys the container to an AWS S3 bucket whenever there is a push to the `main` branch.
+name: deploy-auth
+
+on:
+    # push:
+    #   branches:
+    #     - main
+    #   paths:
+    #     - 'packages/marketing/**'
+    #     - '.github/workflows/marketing.yml'
+    workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Cache node modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - run: npm install
+        working-directory: ./packages/auth
+      - run: npm run build
+        working-directory: ./packages/auth
+
+      # New step to list contents of the directory
+      - name: List contents of the build directory
+        run: ls -la ./packages/auth
+
+      - uses: shinyinc/action-aws-cli@v1.2
+      - name: Sync to S3
+      # Sync the contents of the `packages/marketing/dist` directory to the S3 bucket
+        run: aws s3 sync ./packages/auth/dist s3://${{ secrets.AWS_S3_BUCKET_NAME }}/auth/latest --delete
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+
+      # New step to invalidate CloudFront cache
+      - name: Invalidate CloudFront cache
+        run: aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/auth/latest/remoteEntry.js"
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
