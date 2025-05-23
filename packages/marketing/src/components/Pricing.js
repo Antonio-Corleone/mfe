@@ -153,7 +153,7 @@ export default function Pricing() {
           color="textPrimary"
           gutterBottom
         >
-          Pricing
+          Pricing updated
         </Typography>
         <Typography
           variant="h5"
