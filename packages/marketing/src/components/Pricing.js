@@ -18,7 +18,7 @@ function Copyright() {
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
       <Link color="inherit" href="https://material-ui.com/">
-        Your Website updated
+        Your Website
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -153,7 +153,7 @@ export default function Pricing() {
           color="textPrimary"
           gutterBottom
         >
-          Pricing updated 123
+          Pricing
         </Typography>
         <Typography
           variant="h5"
